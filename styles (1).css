@@ -1,0 +1,620 @@
+/* =================================================================
+   1. RESET & BASE
+   ================================================================= */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+:root{
+  /* ---- Color tokens ---- */
+  --navy-900: #142138;   /* primary dark - hero overlay, footer */
+  --navy-700: #1F3A63;   /* secondary panels / gradients */
+  --gold-500: #BE9A46;   /* accent - dividers, buttons, highlights */
+  --gold-100: #F1E6C9;   /* soft accent tint */
+  --paper:    #F7F6F1;   /* page background */
+  --paper-dim:#EFEDE5;   /* alternate section background */
+  --ink:      #1B1B1B;   /* primary text */
+  --slate:    #5B6472;   /* secondary / muted text */
+  --line:     rgba(20,33,56,0.14); /* hairline borders */
+  --white:    #FFFFFF;
+
+  --font-head: 'Fraunces', serif;
+  --font-body: 'Work Sans', sans-serif;
+
+  --maxw: 1180px;
+}
+
+body{
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--paper);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img{ max-width: 100%; display:block; }
+
+a { color: inherit; text-decoration: none; }
+
+h1,h2,h3,h4{
+  font-family: var(--font-head);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--navy-900);
+}
+
+.wrap{
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+section{ padding: 96px 0; }
+
+/* section heading pattern: short gold rule + serif title + optional intro line */
+.section-head{
+  margin-bottom: 48px;
+  max-width: 640px;
+}
+.section-head .rule{
+  width: 46px;
+  height: 3px;
+  background: var(--gold-500);
+  margin-bottom: 18px;
+}
+.section-head h2{
+  font-size: clamp(1.7rem, 2.6vw, 2.4rem);
+  margin-bottom: 12px;
+}
+.section-head p{
+  color: var(--slate);
+  font-size: 1.02rem;
+}
+.bg-dim{ background: var(--paper-dim); }
+
+.btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.92rem;
+  padding: 12px 26px;
+  border-radius: 999px;
+  border: 1px solid var(--navy-900);
+  cursor: pointer;
+  transition: background .2s ease, color .2s ease, transform .15s ease;
+}
+.btn-primary{
+  background: var(--navy-900);
+  color: var(--white);
+}
+.btn-primary:hover{ background: var(--navy-700); transform: translateY(-1px); }
+
+.btn-gold{
+  background: var(--gold-500);
+  border-color: var(--gold-500);
+  color: var(--navy-900);
+}
+.btn-gold:hover{ background: #a8863c; transform: translateY(-1px); }
+
+.btn-outline{
+  background: transparent;
+  color: var(--navy-900);
+}
+.btn-outline:hover{ background: var(--navy-900); color: var(--white); }
+
+.btn-small{
+  padding: 8px 18px;
+  font-size: 0.82rem;
+}
+
+/* =================================================================
+   2. TOP NAVIGATION (sticky) — added for usability across the long page
+   ================================================================= */
+.site-nav{
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  background: var(--navy-900);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.site-nav .wrap{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  height: 62px;
+}
+.site-nav .brand{
+  color: var(--white);
+  font-family: var(--font-head);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: .2px;
+}
+.site-nav ul{
+  list-style:none;
+  display:flex;
+  gap: 26px;
+  flex-wrap: wrap;
+}
+.site-nav a{
+  color: rgba(255,255,255,0.82);
+  font-size: 0.86rem;
+  font-weight: 500;
+}
+.site-nav a:hover{ color: var(--gold-500); }
+.nav-toggle{ display:none; }
+
+@media (max-width: 900px){
+  .site-nav ul{
+    display:none; /* simple collapse on small screens; hook up a JS toggle if you want a mobile menu */
+  }
+}
+
+/* =================================================================
+   3. HERO
+   ================================================================= */
+.hero{
+  position: relative;
+  min-height: 92vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  overflow:hidden;
+  background: var(--navy-900); /* fallback while bg image loads */
+}
+
+/* ---- Background photo layer -----------------------------------
+   Replace the url() below with your own campus photograph.
+   Recommended: a wide, high-resolution shot of the main block /
+   campus front view, at least 1920px wide.
+------------------------------------------------------------------*/
+.hero-bg{
+  position:absolute;
+  inset:0;
+  background-image: url('REPLACE-WITH-CAMPUS-PHOTO.jpg');
+  background-size: cover;
+  background-position: center;
+  filter: blur(2.5px) brightness(0.55) saturate(1.05); /* "little blurness" but still visible */
+  transform: scale(1.05); /* avoids blurred edge showing */
+}
+/* Dark navy wash on top of the photo so the white text stays readable
+   without hiding the image completely. Lower the alpha values if you
+   want the photo brighter / more visible. */
+.hero-overlay{
+  position:absolute;
+  inset:0;
+  background: linear-gradient(180deg, rgba(20,33,56,0.55) 0%, rgba(20,33,56,0.72) 100%);
+}
+
+.hero-content{
+  position: relative;
+  z-index: 2;
+  color: var(--white);
+  padding: 0 24px;
+  max-width: 860px;
+}
+.hero-eyebrow{
+  font-size: 0.85rem;
+  letter-spacing: 0.4px;
+  color: var(--gold-100);
+  margin-bottom: 18px;
+}
+.hero-content h1{
+  color: var(--white);
+  font-size: clamp(2rem, 5vw, 3.6rem);
+  letter-spacing: .2px;
+}
+.hero-content .tagline{
+  margin-top: 18px;
+  font-size: 1.08rem;
+  color: rgba(255,255,255,0.85);
+  max-width: 560px;
+  margin-left:auto;
+  margin-right:auto;
+}
+.hero-cta{
+  margin-top: 34px;
+  display:flex;
+  gap: 16px;
+  justify-content:center;
+  flex-wrap: wrap;
+}
+
+/* ---- Logos pinned to the two top corners of the hero ---- */
+.hero-logo{
+  position:absolute;
+  top: 22px;
+  z-index: 3;
+  width: 76px;   /* "not too large, not too small" — adjust to taste */
+  height: 76px;
+  object-fit: contain;
+  background: rgba(255,255,255,0.92);
+  border-radius: 50%;
+  padding: 8px;
+}
+.hero-logo.left{ left: 28px; }
+.hero-logo.right{ right: 28px; }
+
+@media (max-width: 600px){
+  .hero-logo{ width: 52px; height: 52px; top: 14px; }
+  .hero-logo.left{ left: 14px; }
+  .hero-logo.right{ right: 14px; }
+}
+
+/* =================================================================
+   4. MISSION & VISION
+   ================================================================= */
+.mv-grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+.mv-card{
+  background: var(--white);
+  border: 1px solid var(--line);
+  padding: 36px;
+}
+.mv-card h3{
+  font-size: 1.3rem;
+  margin-bottom: 14px;
+}
+.mv-card p{ color: var(--slate); }
+
+@media (max-width: 760px){
+  .mv-grid{ grid-template-columns: 1fr; }
+}
+
+/* =================================================================
+   5. MANAGEMENT
+   ================================================================= */
+.people-grid{
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px 28px;
+}
+.people-card{ text-align:left; }
+.people-photo{
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  margin-bottom: 14px;
+  background: var(--paper-dim); /* shows while placeholder photo is swapped in */
+}
+.people-card h4{
+  font-size: 1.02rem;
+  margin-bottom: 2px;
+}
+.people-card .post{
+  color: var(--gold-500);
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+@media (max-width: 900px){ .people-grid{ grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px){ .people-grid{ grid-template-columns: 1fr 1fr; gap: 22px 18px; } }
+
+/* =================================================================
+   6. DEPARTMENTS
+   ================================================================= */
+.dept-grid{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.dept-card{
+  background: var(--white);
+  border: 1px solid var(--line);
+  padding: 28px 26px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  min-height: 168px;
+}
+.dept-card h3{
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+.dept-card p{
+  color: var(--slate);
+  font-size: 0.9rem;
+  margin-bottom: 18px;
+}
+
+@media (max-width: 900px){ .dept-grid{ grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px){ .dept-grid{ grid-template-columns: 1fr; } }
+
+/* =================================================================
+   7. FACULTY (banner style CTA panel)
+   ================================================================= */
+.faculty-panel{
+  background: var(--navy-900);
+  color: var(--white);
+  padding: 56px 48px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+.faculty-panel h2{ color: var(--white); font-size: clamp(1.5rem, 2.4vw, 2.1rem); }
+.faculty-panel p{ color: rgba(255,255,255,0.75); max-width: 480px; margin-top: 10px; }
+.faculty-panel .btn-gold{ white-space: nowrap; }
+
+/* =================================================================
+   8. ACADEMIC CALENDAR
+   ================================================================= */
+.calendar-list{
+  border-top: 1px solid var(--line);
+}
+.calendar-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap: 20px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+.calendar-row .event{ font-weight: 600; }
+.calendar-row .date{ color: var(--slate); font-size: 0.92rem; }
+
+/* =================================================================
+   9. ADMISSIONS
+   ================================================================= */
+.admissions{
+  background: var(--navy-900);
+  color: var(--white);
+  text-align:center;
+}
+.admissions .section-head{ margin: 0 auto 30px; text-align:center; }
+.admissions .section-head .rule{ margin-left:auto; margin-right:auto; }
+.admissions .section-head h2{ color: var(--white); }
+.admissions .section-head p{ color: rgba(255,255,255,0.78); }
+.admissions .steps{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  max-width: 900px;
+  margin: 0 auto 40px;
+  text-align:left;
+}
+.admissions .step{
+  border: 1px solid rgba(255,255,255,0.18);
+  padding: 22px;
+}
+.admissions .step h4{ color: var(--gold-100); font-size: 0.98rem; margin-bottom: 6px; }
+.admissions .step p{ color: rgba(255,255,255,0.7); font-size: 0.88rem; }
+
+@media (max-width: 760px){ .admissions .steps{ grid-template-columns: 1fr; } }
+
+/* =================================================================
+   10. CAMPUS LIFE (clubs / hostels / facilities)
+   ================================================================= */
+.sub-heading{
+  font-size: 1.2rem;
+  margin: 56px 0 22px;
+  padding-top: 30px;
+  border-top: 1px solid var(--line);
+}
+.sub-heading:first-of-type{ margin-top: 0; padding-top: 0; border-top: none; }
+
+.club-grid{
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+}
+.club-card{
+  background: var(--white);
+  border: 1px solid var(--line);
+  padding: 22px;
+  text-align:center;
+}
+.club-logo{
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  margin: 0 auto 14px;
+  background: var(--paper-dim);
+  border-radius: 50%;
+  padding: 10px;
+}
+.club-card h4{ font-size: 0.96rem; margin-bottom: 12px; }
+
+@media (max-width: 900px){ .club-grid{ grid-template-columns: repeat(2, 1fr); } }
+
+.twopanel{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.panel-card{
+  position:relative;
+  background: var(--navy-900);
+  color: var(--white);
+  min-height: 220px;
+  padding: 28px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  overflow:hidden;
+}
+.panel-card .panel-bg{
+  position:absolute; inset:0;
+  background-image: var(--img);
+  background-size:cover;
+  background-position:center;
+  opacity:0.35;
+}
+.panel-card h4{ position:relative; color: var(--white); font-size:1.15rem; margin-bottom: 8px; }
+.panel-card p{ position:relative; color: rgba(255,255,255,0.75); font-size:0.9rem; margin-bottom: 16px; max-width: 380px; }
+.panel-card .btn{ position:relative; align-self:flex-start; }
+
+@media (max-width: 760px){ .twopanel{ grid-template-columns: 1fr; } }
+
+/* =================================================================
+   11. PLACEMENTS
+   ================================================================= */
+.stats-row{
+  display:flex;
+  gap: 40px;
+  margin-bottom: 44px;
+  flex-wrap:wrap;
+}
+.stat{ min-width: 120px; }
+.stat .num{
+  font-family: var(--font-head);
+  font-size: 2.1rem;
+  color: var(--navy-900);
+}
+.stat .label{ color: var(--slate); font-size: 0.86rem; }
+
+.logo-grid{
+  display:grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 20px;
+  align-items:center;
+}
+.logo-grid .logo-slot{
+  border: 1px solid var(--line);
+  background: var(--white);
+  aspect-ratio: 3/2;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 14px;
+}
+.logo-grid img{ max-height: 46px; width:auto; filter: grayscale(1); opacity: .8; }
+
+@media (max-width: 900px){ .logo-grid{ grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 520px){ .logo-grid{ grid-template-columns: repeat(2, 1fr); } }
+
+/* =================================================================
+   12. NEWS & EVENTS / INSTAGRAM REELS
+   ================================================================= */
+.reels-grid{
+  display:grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+}
+.reel-slot{
+  aspect-ratio: 9/16;
+  background: var(--navy-900);
+  border: 1px solid var(--line);
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.reel-slot span{
+  color: rgba(255,255,255,0.55);
+  font-size: 0.78rem;
+  text-align:center;
+  padding: 10px;
+}
+.news-follow{
+  margin-top: 30px;
+  display:flex;
+  align-items:center;
+  gap: 16px;
+  flex-wrap:wrap;
+}
+
+@media (max-width: 900px){ .reels-grid{ grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 560px){ .reels-grid{ grid-template-columns: repeat(2, 1fr); } }
+
+/* =================================================================
+   13. CONTACT
+   ================================================================= */
+.contact-grid{
+  display:grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 50px;
+}
+.contact-info .row{
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+}
+.contact-info .row .k{
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--slate);
+  margin-bottom: 4px;
+}
+.contact-info .row .v{ font-weight: 600; }
+
+.social-row{
+  display:flex;
+  gap: 14px;
+  margin-top: 22px;
+  flex-wrap: wrap;
+}
+.social-pill{
+  border: 1px solid var(--navy-900);
+  padding: 9px 18px;
+  border-radius: 999px;
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+.social-pill:hover{ background: var(--navy-900); color: var(--white); }
+
+.map-slot{
+  border: 1px solid var(--line);
+  min-height: 320px;
+  background: var(--paper-dim);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color: var(--slate);
+  font-size: 0.9rem;
+  text-align:center;
+  padding: 20px;
+}
+
+@media (max-width: 860px){ .contact-grid{ grid-template-columns: 1fr; } }
+
+/* =================================================================
+   14. FOOTER
+   ================================================================= */
+footer{
+  background: var(--navy-900);
+  color: rgba(255,255,255,0.7);
+  padding: 50px 0 26px;
+  font-size: 0.88rem;
+}
+footer .wrap{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+footer .foot-links{
+  display:flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+footer a:hover{ color: var(--gold-500); }
+.foot-bottom{
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.12);
+  text-align:center;
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.45);
+}
+
+/* Accessibility: visible focus state */
+a:focus-visible, button:focus-visible{
+  outline: 2px solid var(--gold-500);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto; }
+  *{ transition:none !important; }
+}
